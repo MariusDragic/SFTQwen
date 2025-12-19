@@ -1,12 +1,25 @@
 [project]
 name = "sftqwen"
 version = "0.1.0"
-description = "Add your description here"
+description = "Supervised fine-tuning of Qwen2.5-1.5B for text summarization"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.10"
+
 dependencies = [
-    "datasets>=4.4.1",
-    "ipykernel>=7.1.0",
-    "torch>=2.9.1",
-    "transformers>=4.57.3",
+    "transformers>=4.45.0",
+    "datasets>=3.4.1,<4.4.0",
+    "accelerate>=0.33.0",
+    "trl>=0.18.2,<=0.24.0",
+    "peft>=0.12.0",
+    "bitsandbytes>=0.43.0",
+    "unsloth",
+    "evaluate>=0.4.2",
+    "rouge-score>=0.1.2",
+    "bert-score",
+    "sacrebleu",
+    "nltk",
+    "sentencepiece",
+    "tqdm",
+    "wandb",
+    "ipykernel>=6.29.0",
 ]
