@@ -22,4 +22,5 @@ dependencies = [
     "tqdm",
     "wandb",
     "ipykernel>=6.29.0",
+    "torchvision"
 ]
