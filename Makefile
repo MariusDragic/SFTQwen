@@ -1,14 +1,11 @@
-.PHONY: help install-uv sync venv train eval generate annotate setup
-
-UV ?= uv
-PYTHON ?= python3
-MAIN ?= main.py
+.PHONY: help install-uv sync venv train eval generate annotate setup pull
 
 help:
 	@echo "Available targets:"
 	@echo "  make install-uv    -> Install uv if missing"
 	@echo "  make sync          -> Install deps with uv sync"
 	@echo "  make venv          -> Show how to activate the uv virtualenv"
+	@echo "  make pull          -> Clone or update the SFTQwen repository"
 	@echo "  make train         -> Run training"
 	@echo "  make eval          -> Run evaluation"
 	@echo "  make generate      -> Run generation / inference"
@@ -25,28 +22,37 @@ install-uv:
 
 sync:
 	@echo ">> Installing dependencies with uv sync"
-	$(UV) sync
+	uv sync
 
 venv:
 	@echo ">> To activate the uv virtual environment manually:"
-	@echo "   source .venv/bin/activate  (if local)"
-	@echo "   or: source /venv/main/bin/activate (container / cloud)"
+	@echo "   source .venv/bin/activate        (local)"
+	@echo "   source /venv/main/bin/activate  (container / cloud)"
+
+clone:
+	@if [ ! -d "SFTQwen" ]; then \
+		echo ">> Cloning SFTQwen repository"; \
+		git clone https://github.com/MariusDragic/SFTQwen.git; \
+	else \
+		echo ">> Updating SFTQwen repository"; \
+		cd SFTQwen && git pull; \
+	fi
 
 train:
 	@echo ">> Running training"
-	$(UV) run python $(MAIN) --mode train
+	uv run python main.py --mode train
 
 eval:
 	@echo ">> Running evaluation"
-	$(UV) run python $(MAIN) --mode eval
+	uv run python main.py --mode eval
 
 generate:
 	@echo ">> Running generation"
-	$(UV) run python $(MAIN) --mode generate
+	uv run python main.py --mode generate
 
 annotate:
 	@echo ">> Running annotation"
-	$(UV) run python $(MAIN) --mode annotate
+	uv run python main.py --mode annotate
 
 setup: install-uv sync
 	@echo ">> Setup completed successfully"
