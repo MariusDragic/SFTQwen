@@ -1,6 +1,6 @@
 # SFTQwen: Supervised Fine-Tuning for News Summarization
 
-A modular Python project for fine-tuning small language models on news summarization using teacher-student distillation.
+A modular Python project for fine-tuning small language models on news summarization using high quality annotated dataset by a Qwen2.5-7B.
 
 ## Project Structure
 
@@ -74,26 +74,6 @@ Comprehensive evaluation:
 - BERTScore (contextual embedding similarity)
 - Batched processing for efficiency
 
-## Usage
-
-### 1. Annotation (Generate Training Data)
-```bash
-python main.py --mode annotate
-```
-Uses a 7B teacher model to generate synthetic summaries from CNN/DailyMail articles.
-
-### 2. Training (Fine-tune Student Model)
-```bash
-python main.py --mode train
-```
-Fine-tunes a 1.5B student model using LoRA on the annotated data.
-
-### 3. Evaluation (Test Set Metrics)
-```bash
-python main.py --mode eval
-```
-Evaluates the trained model on the held-out test set.
-
 ## Configuration
 
 All configuration is centralized in `src/config.py`. Key settings:
@@ -101,11 +81,11 @@ All configuration is centralized in `src/config.py`. Key settings:
 ```python
 # Example: Modify training epochs
 cfg = Config()
-cfg.training.num_train_epochs = 5
+cfg.training.num_train_epochs = 3
 
 # Example: Change LoRA rank
-cfg.lora.r = 128
-cfg.lora.lora_alpha = 128
+cfg.lora.r = 64
+cfg.lora.lora_alpha = 64
 ```
 
 ## Requirements
@@ -119,22 +99,6 @@ See the original notebooks for the complete list of dependencies:
 - `evaluate`, `rouge-score`, `bert-score`, `nltk`
 - `pydantic` (configuration)
 
-## Design Principles
-
-1. **Modularity**: Each module has a single, well-defined responsibility
-2. **Type Safety**: Pydantic for configuration, type hints throughout
-3. **PEP 8 Compliance**: Consistent style, docstrings, naming conventions
-4. **Exact Logic Preservation**: All notebook logic maintained without modification
-5. **Extensibility**: Easy to add new models, metrics, or datasets
-
-## Notes
-
-- The train/val/test split is 80/10/10 by default
-- Validation set monitors overfitting during training
-- Test set is completely unseen until evaluation
-- LoRA adapters are saved separately from the base model
-- All randomness is seeded for reproducibility
-
 ## Author
 
-Refactored from Jupyter notebooks to production-quality Python modules.
+Marius Dragic
