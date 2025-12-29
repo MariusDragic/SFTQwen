@@ -4,7 +4,8 @@ This module handles the complete training pipeline including model loading,
 LoRA configuration, dataset preparation, and training with Unsloth and TRL.
 """
 
-from mailbox import MaildirMessage
+from pprint import pprint
+
 import torch
 import wandb
 from datasets import Dataset
@@ -29,6 +30,12 @@ def run_training(cfg: Config) -> None:
     Args:
         cfg: Configuration object containing all settings.
     """
+    print("\n" + "=" * 80)
+    print("TRAINING CONFIG")
+    print("=" * 80)
+    pprint(cfg.training.model_dump(), sort_dicts=False)
+    print("=" * 80 + "\n")
+
     setup_gpu()
     use_bf16 = is_bfloat16_supported()
 
