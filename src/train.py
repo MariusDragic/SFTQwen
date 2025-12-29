@@ -6,18 +6,19 @@ LoRA configuration, dataset preparation, and training with Unsloth and TRL.
 
 from pprint import pprint
 
-import torch
-import wandb
-from datasets import Dataset
-from peft import LoftQConfig
-from transformers import DataCollatorForSeq2Seq, TrainingArguments
-from trl import SFTTrainer
 from unsloth import (
     FastLanguageModel,
     get_chat_template,
     is_bfloat16_supported,
     unsloth_train,
 )
+
+import torch
+import wandb
+from datasets import Dataset
+from peft import LoftQConfig
+from transformers import DataCollatorForSeq2Seq, TrainingArguments
+from trl import SFTTrainer
 
 from .config import Config
 from .dataset import create_train_val_test_splits, tokenize_dataset
