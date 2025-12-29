@@ -77,8 +77,8 @@ class TrainingConfig(BaseModel):
 
     output_dir: str = "./checkpoints"
     num_train_epochs: int = 3
-    per_device_train_batch_size: int = 8
-    per_device_eval_batch_size: int = 8
+    per_device_train_batch_size: int = 32
+    per_device_eval_batch_size: int = 32
     gradient_accumulation_steps: int = 8
 
     learning_rate: float = 2e-4
@@ -115,6 +115,7 @@ class GenerationConfig(BaseModel):
     do_sample: bool = False
     repetition_penalty: float = 1.0
     no_repeat_ngram_size: int = 3
+    batch_eval: int = 16
 
 
 class PromptConfig(BaseModel):

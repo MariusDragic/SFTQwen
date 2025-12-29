@@ -17,7 +17,7 @@ from .config import Config
 from .generate import generate_summaries
 from .utils import setup_gpu
 
-def run_evaluation(cfg: Config, test_dataset: Dataset, batch_size: int = 4) -> dict:
+def run_evaluation(cfg: Config, test_dataset: Dataset, batch_size: int) -> dict:
     """Run comprehensive evaluation on the test dataset.
 
     Args:

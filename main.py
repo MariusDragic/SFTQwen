@@ -90,8 +90,8 @@ def main() -> None:
 
         print(f"Test dataset size: {len(test_dataset)} examples\n")
 
-        metrics = run_evaluation(cfg, test_dataset)
-        
+        metrics = run_evaluation(cfg, test_dataset, batch_size=cfg.generation.batch_eval)
+
         print("\n" + "=" * 80)
         print("EVALUATION RESULTS")
         print("=" * 80)
