@@ -11,15 +11,7 @@ import argparse
 import random
 from pathlib import Path
 from pprint import pprint
-
-from datasets import Dataset
-
-from src.annotator import run_annotation
 from src.config import Config
-from src.dataset import create_train_val_test_splits
-from src.eval import run_evaluation
-from src.generate import format_generation_output, generate_summary
-from src.train import run_training
 
 
 def main() -> None:
@@ -56,6 +48,8 @@ def main() -> None:
     cfg = Config()
 
     if args.mode == "annotate":
+        from src.annotator import run_annotation
+
         print("\n" + "=" * 80)
         print("Running annotation pipeline...")
         print("=" * 80 + "\n")
@@ -65,6 +59,8 @@ def main() -> None:
         print("=" * 80 + "\n")
 
     elif args.mode == "train":
+        from src.train import run_training
+
         print("\n" + "=" * 80)
         print("Running training pipeline...")
         print("=" * 80 + "\n")
@@ -74,6 +70,11 @@ def main() -> None:
         print("=" * 80 + "\n")
 
     elif args.mode == "eval":
+        from datasets import Dataset
+
+        from src.dataset import create_train_val_test_splits
+        from src.eval import run_evaluation
+
         print("\n" + "=" * 80)
         print("Running evaluation pipeline...")
         print("=" * 80 + "\n")
@@ -102,6 +103,10 @@ def main() -> None:
         print("=" * 80 + "\n")
 
     elif args.mode == "generate":
+        from datasets import Dataset
+
+        from src.generate import format_generation_output, generate_summary
+
         print("\n" + "=" * 80)
         print("Running generation...")
         print("=" * 80 + "\n")
@@ -113,7 +118,6 @@ def main() -> None:
             raw = Dataset.from_file(cfg.model.dataset_path)
             example = raw[random.randrange(len(raw))]
             article = example["document"]
-
 
         summary = generate_summary(cfg, article)
         print(format_generation_output(article=article, summary=summary))

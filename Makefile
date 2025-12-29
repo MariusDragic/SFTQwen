@@ -39,6 +39,10 @@ clone:
 		cd SFTQwen && git pull; \
 	fi
 
+pull:
+	@echo ">> Pulling latest changes for SFTQwen"
+	git pull
+
 train:
 	@echo ">> Running training"
 	uv run python main.py --mode train
