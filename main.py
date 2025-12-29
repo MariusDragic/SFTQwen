@@ -4,9 +4,12 @@ This module provides a command-line interface for running different modes:
 - annotate: Generate synthetic summaries using a teacher model
 - train: Fine-tune a student model on the annotated data
 - eval: Evaluate the trained model on the test set
+- generate: Generate a summary for a single article
 """
 
 import argparse
+import random
+from pathlib import Path
 
 from datasets import Dataset
 
@@ -14,6 +17,7 @@ from src.annotator import run_annotation
 from src.config import Config
 from src.dataset import create_train_val_test_splits
 from src.eval import run_evaluation
+from src.generate import generate_summary
 from src.train import run_training
 
 
@@ -25,13 +29,24 @@ def main() -> None:
     )
     parser.add_argument(
         "--mode",
-        choices=["annotate", "train", "eval"],
+        choices=["annotate", "train", "eval", "generate"],
         required=True,
         help=(
             "Mode to run:\n"
             "  annotate - Generate synthetic summaries using teacher model\n"
             "  train    - Fine-tune student model on annotated data\n"
-            "  eval     - Evaluate trained model on test set"
+            "  eval     - Evaluate trained model on test set\n"
+            "  generate - Generate a summary for a single article"
+        ),
+    )
+
+    parser.add_argument(
+        "--path_to_article",
+        type=str,
+        default=None,
+        help=(
+            "Path to a text file containing the article to summarize. "
+            "If omitted, a random article is sampled from the dataset."
         ),
     )
 
@@ -83,6 +98,22 @@ def main() -> None:
         for name, value in metrics.items():
             print(f"{name:20s}: {value:.4f}")
         print("=" * 80 + "\n")
+
+    elif args.mode == "generate":
+        print("\n" + "=" * 80)
+        print("Running generation...")
+        print("=" * 80 + "\n")
+
+        if args.path_to_article is not None:
+            article_path = Path(args.path_to_article)
+            article = article_path.read_text(encoding="utf-8")
+        else:
+            raw = Dataset.from_file(cfg.model.dataset_path)
+            example = raw[random.randrange(len(raw))]
+            article = example["document"]
+
+        summary = generate_summary(cfg, article)
+        print(summary)
 
 
 if __name__ == "__main__":

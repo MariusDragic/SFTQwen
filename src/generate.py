@@ -111,7 +111,7 @@ def generate_summaries(cfg: Config, documents: List[str]) -> List[str]:
     Returns:
         List of generated summaries.
     """
-    # Load model if not already loaded (in practice, cache this)
+
     model, tokenizer = load_model_for_inference(
         base_model_name_or_path=cfg.model.base_model,
         lora_path=cfg.lora.lora_dir,
@@ -173,3 +173,16 @@ def generate_summaries(cfg: Config, documents: List[str]) -> List[str]:
         preds.append(decoded.strip())
 
     return preds
+
+
+def generate_summary(cfg: Config, article: str) -> str:
+    """Generate a single summary for one article.
+
+    Args:
+        cfg: Configuration object.
+        article: Article text to summarize.
+
+    Returns:
+        Generated summary.
+    """
+    return generate_summaries(cfg, [article])[0]

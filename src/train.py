@@ -30,11 +30,8 @@ def run_training(cfg: Config) -> None:
         cfg: Configuration object containing all settings.
     """
     setup_gpu()
-    # `setup_gpu()` clears VRAM but disables autograd globally.
-    # Training requires gradients, so re-enable them here.
     use_bf16 = is_bfloat16_supported()
 
-    # Load base model
     model, tokenizer = FastLanguageModel.from_pretrained(
         model_name=cfg.model.base_model,
         max_seq_length=cfg.model.max_seq_length,
@@ -42,13 +39,11 @@ def run_training(cfg: Config) -> None:
         load_in_4bit=cfg.model.load_in_4bit,
     )
 
-    # Configure chat template
     tokenizer = get_chat_template(
         tokenizer,
         chat_template=cfg.model.chat_template,
     )
 
-    # Ensure EOS token is correctly set
     im_end = cfg.model.eos_token
     im_end_id = tokenizer.convert_tokens_to_ids(im_end)
 
@@ -56,13 +51,11 @@ def run_training(cfg: Config) -> None:
         tokenizer.eos_token = im_end
         tokenizer.eos_token_id = im_end_id
 
-    # Configure LoftQ for better 4-bit LoRA initialization
     loftq_config = LoftQConfig(
         loftq_bits=cfg.lora.loftq_bits,
         loftq_iter=cfg.lora.loftq_iter,
     )
 
-    # Apply LoRA adapters
     model = FastLanguageModel.get_peft_model(
         model,
         r=cfg.lora.r,
@@ -79,7 +72,6 @@ def run_training(cfg: Config) -> None:
         loftq_config=loftq_config,
     )
 
-    # Load and split dataset
     raw = Dataset.from_file(cfg.model.dataset_path)
     splits = create_train_val_test_splits(
         raw,
@@ -88,7 +80,6 @@ def run_training(cfg: Config) -> None:
         seed=cfg.training.seed,
     )
 
-    # Tokenize datasets
     train_dataset = tokenize_dataset(
         splits["train"],
         tokenizer,
@@ -106,7 +97,6 @@ def run_training(cfg: Config) -> None:
         cfg.prompt.user_prompt,
     )
 
-    # Configure training arguments
     training_args = TrainingArguments(
         output_dir=cfg.training.output_dir,
         num_train_epochs=cfg.training.num_train_epochs,
@@ -135,17 +125,14 @@ def run_training(cfg: Config) -> None:
         seed=cfg.training.seed,
     )
 
-    # Initialize wandb
     wandb.finish()
     wandb.init(
         name=cfg.training.output_dir.split("/")[-1],
         project=cfg.training.report_to,
     )
 
-    # Create data collator
     data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer)
 
-    # Create trainer
     trainer = SFTTrainer(
         model=model,
         tokenizer=tokenizer,
@@ -159,7 +146,6 @@ def run_training(cfg: Config) -> None:
 
     trainer_stats = unsloth_train(trainer)
 
-    # Save LoRA adapter
     trainer.model.save_pretrained(cfg.lora.lora_dir)
     tokenizer.save_pretrained(cfg.lora.lora_dir)
 

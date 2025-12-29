@@ -10,5 +10,6 @@ wheels/
 .venv
 .env
 
-# Safetensor too heavy
+# Model artifacts (too large for git)
 model/
+model/**
