@@ -1,4 +1,4 @@
-.PHONY: help install-uv sync venv train eval generate annotate setup pull
+.PHONY: help install-uv sync venv train eval generate annotate config setup pull
 
 help:
 	@echo "Available targets:"
@@ -10,6 +10,7 @@ help:
 	@echo "  make eval          -> Run evaluation"
 	@echo "  make generate      -> Run generation / inference"
 	@echo "  make annotate      -> Run annotation pipeline"
+	@echo "  make config        -> Print full configuration"
 	@echo "  make setup         -> install-uv + sync"
 
 install-uv:
@@ -53,6 +54,10 @@ generate:
 annotate:
 	@echo ">> Running annotation"
 	uv run python main.py --mode annotate
+
+config:
+	@echo ">> Printing configuration"
+	uv run python main.py --mode config
 
 setup: install-uv sync
 	@echo ">> Setup completed successfully"

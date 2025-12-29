@@ -5,6 +5,7 @@ summaries from documents using the fine-tuned model with custom stopping criteri
 """
 
 import re
+import textwrap
 from typing import List
 
 import torch
@@ -186,3 +187,33 @@ def generate_summary(cfg: Config, article: str) -> str:
         Generated summary.
     """
     return generate_summaries(cfg, [article])[0]
+
+
+def format_generation_output(*, article: str, summary: str, width: int = 100) -> str:
+    """Format a generation result for terminal display.
+
+    This is presentation-only (no change to generation logic).
+
+    Args:
+        article: Input article text.
+        summary: Generated summary.
+        width: Line wrap width.
+
+    Returns:
+        Formatted string.
+    """
+    sep = "=" * 100
+    article_preview = textwrap.fill(article.strip(), width=width)
+    summary_wrapped = textwrap.fill(summary.strip(), width=width)
+
+    return (
+        f"{sep}\n"
+        f"ARTICLE\n"
+        f"{sep}\n"
+        f"{article_preview}\n"
+        f"{sep}\n"
+        f"SUMMARY\n"
+        f"{sep}\n"
+        f"{summary_wrapped}\n"
+        f"{sep}"
+    )

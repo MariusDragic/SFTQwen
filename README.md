@@ -5,7 +5,7 @@ SFTQwen fine-tunes a small language model (SLM) to perform **news summarization*
 
 ## Objective
 
-- Train a summarization-capable SLM from a larger instruction-tuned base model.
+- Train a summarization-capable SLM (~1.5B) from a larger instruction-tuned base model.
 - Operate under **≤16 GB VRAM**.
 - Use a compact training set of **~5,000 synthetic examples**.
 
@@ -31,6 +31,21 @@ Implementation details and the full methodology live in the accompanying report/
 
 The CLI entry point is [main.py](main.py).
 
+## Makefile shortcuts
+
+If you use `uv`, the included Makefile provides short commands that wrap the CLI.
+
+```bash
+make help
+make setup     # installs uv (if needed) + installs dependencies
+make annotate
+make train
+make eval
+make generate
+```
+
+These targets call `uv run python main.py --mode ...` under the hood.
+
 ### 1) Generate synthetic training data (annotation)
 
 Creates an on-disk dataset of synthetic summaries.
@@ -53,6 +68,14 @@ Computes summarization metrics on a test split that is not used for training.
 
 ```bash
 python main.py --mode eval
+```
+
+### 3) Generate summaries
+
+Generate summarie over newspaper articles, either random or chosen news article.
+
+```bash
+python main.py --mode generate --path_to_article[Optionnal]
 ```
 
 ## Configuration

@@ -10,6 +10,7 @@ This module provides a command-line interface for running different modes:
 import argparse
 import random
 from pathlib import Path
+from pprint import pprint
 
 from datasets import Dataset
 
@@ -17,7 +18,7 @@ from src.annotator import run_annotation
 from src.config import Config
 from src.dataset import create_train_val_test_splits
 from src.eval import run_evaluation
-from src.generate import generate_summary
+from src.generate import format_generation_output, generate_summary
 from src.train import run_training
 
 
@@ -29,14 +30,15 @@ def main() -> None:
     )
     parser.add_argument(
         "--mode",
-        choices=["annotate", "train", "eval", "generate"],
+        choices=["annotate", "train", "eval", "generate", "config"],
         required=True,
         help=(
             "Mode to run:\n"
             "  annotate - Generate synthetic summaries using teacher model\n"
             "  train    - Fine-tune student model on annotated data\n"
             "  eval     - Evaluate trained model on test set\n"
-            "  generate - Generate a summary for a single article"
+            "  generate - Generate a summary for a single article\n"
+            "  config   - Print the full configuration"
         ),
     )
 
@@ -112,8 +114,16 @@ def main() -> None:
             example = raw[random.randrange(len(raw))]
             article = example["document"]
 
+
         summary = generate_summary(cfg, article)
-        print(summary)
+        print(format_generation_output(article=article, summary=summary))
+
+    elif args.mode == "config":
+        print("\n" + "=" * 80)
+        print("CONFIG")
+        print("=" * 80)
+        pprint(cfg.model_dump(), sort_dicts=False)
+        print("=" * 80 + "\n")
 
 
 if __name__ == "__main__":
