@@ -79,7 +79,6 @@ def main() -> None:
         print("Running evaluation pipeline...")
         print("=" * 80 + "\n")
 
-        # Load dataset and get test split
         raw = Dataset.from_file(cfg.model.dataset_path)
         splits = create_train_val_test_splits(
             raw,
@@ -91,10 +90,8 @@ def main() -> None:
 
         print(f"Test dataset size: {len(test_dataset)} examples\n")
 
-        # Run evaluation
         metrics = run_evaluation(cfg, test_dataset)
-
-        # Print results
+        
         print("\n" + "=" * 80)
         print("EVALUATION RESULTS")
         print("=" * 80)

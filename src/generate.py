@@ -7,11 +7,10 @@ summaries from documents using the fine-tuned model with custom stopping criteri
 import re
 import textwrap
 from typing import List
-
+from unsloth import FastLanguageModel, get_chat_template
 import torch
 from peft import PeftModel
 from transformers import StoppingCriteria, StoppingCriteriaList
-from unsloth import FastLanguageModel, get_chat_template
 
 from .config import Config
 
