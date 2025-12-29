@@ -10,6 +10,10 @@ wheels/
 .venv
 .env
 
-# Model artifacts (too large for git)
-model/
-model/**
+# Model artifacts (keep folder, ignore contents)
+model/*
+!model/.gitkeep
+
+# Checkpoints (keep folder, ignore contents)
+checkpoints/*
+!checkpoints/.gitkeep
