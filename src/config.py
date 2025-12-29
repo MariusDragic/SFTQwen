@@ -76,7 +76,7 @@ class TrainingConfig(BaseModel):
     """Configuration for model training."""
 
     output_dir: str = "./checkpoints"
-    num_train_epochs: int = 3
+    num_train_epochs: int = 4
     per_device_train_batch_size: int = 32
     per_device_eval_batch_size: int = 32
     gradient_accumulation_steps: int = 8
